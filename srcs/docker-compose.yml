@@ -1,7 +1,25 @@
-		
 version: "3"
 
-services:                         # précise les différents services (images) à utiliser 
+services:         
+
+  ngnix:
+    container_name : ngnix
+    #build :
+    #  requirements/ngnix
+    #  dockerfile : Dokerfile 
+    env_file : .env
+    #volume :
+    # - wordpress:/var/www/wordpress
+    networks :
+      - inception
+    ports :
+      - "00:00"
+    restart : on-failure
+
+
+
+#------------------------------------------------------------------------------------------------
+                                  # précise les différents services (images) à utiliser 
   nginx:
     build: requirements/website/ 
     env_file: .env                # indique le fichier optionnel contenant l'environnement
