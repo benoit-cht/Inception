@@ -1,0 +1,26 @@
+		
+version: "3"
+
+services:                         # précise les différents services (images) à utiliser 
+  nginx:
+    build: requirements/website/ 
+    env_file: .env                # indique le fichier optionnel contenant l'environnement
+    container_name: website       # Le nom du container ( doit porter le meme nom que le service d'apres le sujet )
+    ports:
+      - "80:80"                   # le port, détaillé juste en dessous
+    restart: always               # Permet de redémarrer automatiquement le container en cas de crash
+
+  nginx:
+    build: requirements/intra/
+    env_file: .env
+    container_name: intra
+    ports:
+      - "80:80"
+    restart: always 
+  
+  mariadb:
+    container_name: badgeuse
+    build: mariadb
+    env_file: .env
+    restart: always
+					
