@@ -1,14 +1,14 @@
-FROM    debian:buster
+FROM debian:buster
 
-RUN     apt-get update
-RUN     apt-get install -y ngnix openssl
 
-RUN     mkdir /etc/ngnix/ssl
-RUN     openssl
-#RUN    mkdir -p /run/ngnix
+RUN apt -y update && apt install -y nginx && apt install openssl -y
 
-COPY ./conf/ngnix /etc/ngnix/conf.d
 
-EXPOSE
 
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+
+# COPY ./conf/default /etc/nginx/sites-available/
+
+COPY ./tools/script.sh /
+
+
+CMD [ "/script.sh" ]

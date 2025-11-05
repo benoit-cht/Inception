@@ -1,44 +1,12 @@
 version: "3"
 
-services:         
-
-  ngnix:
-    container_name : ngnix
-    #build :
-    #  requirements/ngnix
-    #  dockerfile : Dokerfile 
-    env_file : .env
-    #volume :
-    # - wordpress:/var/www/wordpress
-    networks :
-      - inception
-    ports :
-      - "00:00"
-    restart : on-failure
-
-
-
-#------------------------------------------------------------------------------------------------
-                                  # précise les différents services (images) à utiliser 
+services:
   nginx:
-    build: requirements/website/ 
-    env_file: .env                # indique le fichier optionnel contenant l'environnement
-    container_name: website       # Le nom du container ( doit porter le meme nom que le service d'apres le sujet )
+    container_name: nginx
+    build: ./requirements/nginx/.
+    image: nginx:42
     ports:
-      - "80:80"                   # le port, détaillé juste en dessous
-    restart: always               # Permet de redémarrer automatiquement le container en cas de crash
-
-  nginx:
-    build: requirements/intra/
-    env_file: .env
-    container_name: intra
-    ports:
-      - "80:80"
-    restart: always 
-  
-  mariadb:
-    container_name: badgeuse
-    build: mariadb
-    env_file: .env
+     - "443:443"
+    env_file:
+      - .env
     restart: always
-					
