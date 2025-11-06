@@ -14,3 +14,4 @@ RUN openssl req -x509 -nodes -out /etc/nginx/ssl/inception.crt -keyout /etc/ngin
 RUN mkdir -p /var/run/nginx
 COPY conf/ngnix-config-default /etc/nginx/nginx.conf
 
+ENTRYPOINT [ "nginx", "-g", "daemon off;" ]
