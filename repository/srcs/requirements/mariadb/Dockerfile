@@ -1,12 +1,18 @@
-FROM debian:bullseye
+# srcs/requirements/mariadb/Dockerfile
+FROM mariadb:10.5
 
-RUN apt -y update && apt -y upgrade 
-RUN apt-get install -y mariadb-server
+# Copie le script d'initialisation
+COPY conf/init.sql /docker-entrypoint-initdb.d/
 
-COPY conf/50-server.cnf	/etc/mysql/mariadb.conf.d/50-server.cnf
+# Crée un utilisateur et une base de données pour WordPress
+ENV MYSQL_ROOT_PASSWORD=root_password
+ENV MYSQL_DATABASE=wordpress
+ENV MYSQL_USER=wp_user
+ENV MYSQL_PASSWORD=wp_password
 
-#COPY ./tools/script.sh /
+# Expose le port 3306
+EXPOSE 3306
 
-#RUN chmod -R +x /script.sh
+# Démarre MariaDB en mode safe (pour éviter les erreurs de socket)
+CMD ["mysqld_safe"]
 
-#CMD ["/script.sh"]
