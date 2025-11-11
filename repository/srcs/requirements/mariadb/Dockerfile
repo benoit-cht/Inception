@@ -1,12 +1,10 @@
-FROM debian:bullseye
+FROM    mariadb:10.5
 
-RUN apt -y update && apt -y upgrade 
-RUN apt-get install -y mariadb-server
+COPY    conf/50-server.cnf	/etc/mysql/mariadb.conf.d/50-server.cnf
 
-COPY conf/50-server.cnf	/etc/mysql/mariadb.conf.d/50-server.cnf
+COPY    tools/script.sh /docker-entrypoint-initdb.d/ 
+RUN     chmod +x  /docker-entrypoint-initdb.d/script.sh
 
-#COPY ./tools/script.sh /
+EXPOSE  3306
 
-#RUN chmod -R +x /script.sh
-
-#CMD ["/script.sh"]
+#CMD     ["/script.sh"]

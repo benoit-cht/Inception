@@ -1,12 +1,25 @@
-version: "3"
+version: '3.8'
 
 services:
-  nginx:
-    container_name: nginx
-    build: ./requirements/nginx/.
-    image: nginx:42
+  mariadb:
+    build: ./requirements/mariadb
+    container_name: mariadb
+    restart: unless-stopped
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - inception
     ports:
-     - "443:443"
-    env_file:
-      - .env
-    restart: always
+      - "3306:3306"
+    env_file: .env
+    environment:
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+
+volumes:
+  mariadb_data:
+    driver: local
+
+networks:
+  inception:
+    driver: bridge
+
