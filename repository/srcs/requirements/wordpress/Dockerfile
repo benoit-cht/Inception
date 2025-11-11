@@ -1,14 +1,42 @@
-FROM	debian:bullseye
+# srcs/requirements/wordpress/Dockerfile
+FROM debian:bullseye
 
-RUN	apt-get update && apt-get -y upgrade
+# Installe les dépendances nécessaires
+RUN apt-get update && apt-get install -y \
+    php-fpm \
+    php-mysql \
+    php-curl \
+    php-gd \
+    php-mbstring \
+    php-xml \
+    php-zip \
+    wget \
+    curl \
+    unzip \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN	apt-get install -y wget
+# Crée le dossier /var/www/html
+RUN mkdir -p /var/www/html
 
-RUN	apt-get install -y php7.3
-RUN	apt-get install -y php-fpm
-RUN	apt-get install -y php-mysql
-RUN	apt-get install -y mariadb-client
+# Télécharge et installe WordPress
+RUN wget https://wordpress.org/latest.tar.gz \
+    && tar -xzf latest.tar.gz -C /var/www/html --strip-components=1 \
+    && rm latest.tar.gz
 
-RUN 	wget https://fr.wordpress.org/wordpress-6.0-fr_FR.tar.gz -P /var/www
-RUN 	cd /var/www && tar -xzf wordpress-6.0-fr_FR.tar.gz && rm wordpress-6.0-fr_FR.tar.gz
-RUN	chown -R root:root /var/www/wordpress
+# Copie le fichier de configuration WordPress
+COPY conf/wp-config.php /var/www/html/
+
+# Copie le script de configuration
+COPY tools/setup-wp.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/setup-wp.sh
+
+WORKDIR /var/www/html
+
+# Donne les permissions nécessaires uniquement au dossier /var/www/html
+RUN chown -R www-data:www-data /var/www/html
+
+EXPOSE 9000
+
+# Commande pour démarrer php-fpm
+CMD ["php-fpm7.4", "-F"]
+
